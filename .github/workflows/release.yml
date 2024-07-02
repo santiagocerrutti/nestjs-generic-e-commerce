@@ -1,14 +1,8 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: ['CI']
-    branches: [master]
-    types:
-      - completed
-  # push:
-  #   branches:
-  #     - master # or main
+  push:
+    branches: ['master']
 
 permissions:
   contents: read # for checkout
