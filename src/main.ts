@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/exception-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,9 +19,15 @@ async function bootstrap() {
 
   app.enableCors();
 
-  app.useGlobalPipes(new ValidationPipe());
-  // TODO: llevar esto a una variable de entorno
+  app.useGlobalPipes(
+    new ValidationPipe({
+      // This is to remove properties not declared in DTO
+      whitelist: true,
+    }),
+  );
+  app.useGlobalFilters(new HttpExceptionFilter());
 
+  // TODO: llevar esto a una variable de entorno
   await app.listen(8081);
 }
 bootstrap();

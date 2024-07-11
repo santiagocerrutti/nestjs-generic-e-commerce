@@ -1,7 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
-import { ProductsController } from './products.controller';
-import { ProductsService } from './products.service';
+import { Test, TestingModule } from '@nestjs/testing';
 import {
   mockCreateResult,
   mockDeleteResult,
@@ -10,6 +8,8 @@ import {
   mockProductsService,
   mockUpdateResult,
 } from './__mocks__/products.service';
+import { ProductsController } from './products.controller';
+import { ProductsService } from './products.service';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -48,6 +48,7 @@ describe('ProductsController', () => {
 
   describe('findOne', () => {
     it('should find one product', async () => {
+      // Prepare
       const productId = '7c7a2ccfafbfd8f997117c19';
 
       // Act

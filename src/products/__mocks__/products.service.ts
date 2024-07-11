@@ -1,6 +1,6 @@
-// TODO: leer documentación sobre buenas prácticas y aplicarlas.
+import { Product } from '../product.entity';
 
-export const fakeProducts = [
+export const fakeProducts: Product[] = [
   {
     _id: '7c7a2ccfafbfd8f997117c19',
     title: 'Elegant Steel Ball',
@@ -12,8 +12,6 @@ export const fakeProducts = [
     stock: 86,
     category: 'Towels',
     thumbnails: ['https://loremflickr.com/640/480/food?lock=1011313511759872'],
-    owner: { $oid: 'a82af04b617881e0560bddd4' },
-    __v: 0,
   },
   {
     _id: 'f7d72ed8ba4548d6a9e0d8bd',
@@ -26,8 +24,6 @@ export const fakeProducts = [
     stock: 56,
     category: 'Gloves',
     thumbnails: ['https://loremflickr.com/640/480/food?lock=6499831142940672'],
-    owner: { $oid: 'a82af04b617881e0560bddd4' },
-    __v: 0,
   },
   {
     _id: 'db9fbfb2449bdd652e6eae1d',
@@ -40,8 +36,6 @@ export const fakeProducts = [
     stock: 70,
     category: 'Towels',
     thumbnails: ['https://loremflickr.com/640/480/food?lock=5042146096709632'],
-    owner: { $oid: 'a82af04b617881e0560bddd4' },
-    __v: 0,
   },
   {
     _id: '83e86d747cdbabd4a7d1aecd',
@@ -54,8 +48,6 @@ export const fakeProducts = [
     stock: 76,
     category: 'Salad',
     thumbnails: ['https://loremflickr.com/640/480/food?lock=2418136341020672'],
-    owner: { $oid: 'a82af04b617881e0560bddd4' },
-    __v: 0,
   },
 ];
 
@@ -65,20 +57,10 @@ export const mockCreateResult = fakeProducts[1];
 export const mockUpdateResult = fakeProducts[2];
 export const mockDeleteResult = fakeProducts[3];
 
-export const mockFindAll = jest.fn().mockResolvedValue(mockFindAllResult);
-
-export const mockFindOne = jest.fn().mockResolvedValue(mockFindOneResult);
-
-export const mockCreate = jest.fn().mockResolvedValue(mockCreateResult);
-
-export const mockUpdate = jest.fn().mockResolvedValue(mockUpdateResult);
-
-export const mockDelete = jest.fn().mockResolvedValue(mockDeleteResult);
-
 export const mockProductsService = {
-  findAll: mockFindAll,
-  findOne: mockFindOne,
-  create: mockCreate,
-  update: mockUpdate,
-  delete: mockDelete,
+  findAll: jest.fn().mockResolvedValue(mockFindAllResult),
+  findOne: jest.fn().mockResolvedValue(mockFindOneResult),
+  create: jest.fn().mockResolvedValue(mockCreateResult),
+  update: jest.fn().mockResolvedValue(mockUpdateResult),
+  delete: jest.fn().mockResolvedValue(mockDeleteResult),
 };
