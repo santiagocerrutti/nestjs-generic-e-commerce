@@ -1,5 +1,5 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { SuccessResponseBody } from 'src/types.dto';
+import { SuccessResponseBody } from '../types.dto';
 
 @Exclude()
 export class ProductResponseDto {

@@ -15,7 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { ErrorResponseBody, FailResponseBody } from 'src/types.dto';
+import { ErrorResponseBody, FailResponseBody } from '../types.dto';
 import {
   CreateProductRequestBody,
   UpdateProductRequestBody,
