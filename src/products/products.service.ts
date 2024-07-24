@@ -1,13 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Product } from './product.entity';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { ProductDto } from './product.dto';
+import { Product } from './product.entity';
+import { ProductRequestDto } from './product.request.dto';
 
 @Injectable()
 export class ProductsService {
   private products: Product[] = [
     {
-      _id: '640ef7ca-01c6-4931-b3c0-900fc2e657b1',
+      _id: '6686e63d7d92a73d9c4998ee',
       title: 'Park Is Mine, The',
       description:
         'est risus auctor sed tristique in tempus sit amet sem fusce consequat nulla nisl',
@@ -21,7 +25,7 @@ export class ProductsService {
       ],
     },
     {
-      _id: '6e324eea-1a29-490b-9e18-69c2e8da7816',
+      _id: '6686e64acc31735db8605159',
       title: "Dupes, The (Al-makhdu'un)",
       description:
         'laoreet ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel sem sed sagittis nam congue risus semper porta',
@@ -35,7 +39,7 @@ export class ProductsService {
       ],
     },
     {
-      _id: '354d9abc-34cc-4cb7-9748-b6614a1189d3',
+      _id: '6686e650f576037fd2b1c41f',
       title: 'Spanglish',
       description:
         'sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod scelerisque quam turpis adipiscing lorem vitae',
@@ -50,11 +54,11 @@ export class ProductsService {
     },
   ];
 
-  async findAll() {
+  async findAll(): Promise<Product[]> {
     return Promise.resolve(this.products);
   }
 
-  async findOne(productId: string) {
+  async findOne(productId: string): Promise<Product> {
     const product = this.products.find((p) => p._id === productId);
 
     if (product) {
@@ -63,7 +67,7 @@ export class ProductsService {
     throw new NotFoundException();
   }
 
-  async create(product: ProductDto) {
+  async create(product: ProductRequestDto): Promise<Product> {
     const newProduct = {
       ...product,
       _id: randomUUID(),
@@ -74,38 +78,37 @@ export class ProductsService {
     return Promise.resolve(newProduct);
   }
 
-  async update(productId: string, product: Partial<ProductDto>) {
-    const index = this.products.findIndex((p) => p._id === productId);
+  async update(
+    productId: string,
+    product: Partial<ProductRequestDto>,
+  ): Promise<Product> {
+    throw new InternalServerErrorException();
+    // const index = this.products.findIndex((p) => p._id === productId);
 
-    if (index >= 0) {
-      const updatedProduct = {
-        ...this.products[index],
-        ...product,
-      };
+    // if (index >= 0) {
+    //   const updatedProduct = {
+    //     ...this.products[index],
+    //     ...product,
+    //   };
 
-      this.products[index] = updatedProduct;
+    //   this.products[index] = updatedProduct;
 
-      return Promise.resolve(updatedProduct);
-    }
-    throw new NotFoundException();
+    //   return Promise.resolve(updatedProduct);
+    // }
+    // throw new NotFoundException({
+    //   errors: ['Product not found'],
+    // });
   }
 
-  /**
-   * TODO: esto devuelve un:
-  {
-    "message": "Not Found",
-    "statusCode": 404
-  }
-    Debería devolver un error que cumpla con el estándar
-   */
+  async delete(productId: string): Promise<Product> {
+    const product = this.products.find((p) => p._id === productId);
 
-  async delete(productId: string) {
-    const product = this.findOne(productId);
     if (product) {
       this.products = this.products.filter((p) => p._id !== productId);
 
       return Promise.resolve(product);
     }
-    throw new NotFoundException();
+
+    throw new NotFoundException(['Product not found']);
   }
 }

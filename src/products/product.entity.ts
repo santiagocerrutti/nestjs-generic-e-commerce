@@ -1,6 +1,4 @@
-// TODO: sería un buen desafío mantener la base de datos y crear un sistema que se comunique con él.
-// TODO: Se podría buscar la manera de mantener los modelos definidos con mongoose y buscar la forma de manejar los atributos referenciales.
-
+//* Las entities son clases de negocio (domain layer), no deben tener nunca relación con el mecanismo de persistencia (infrastructure layer)
 //* Una entity puede tener atributos referenciales a otras entities.
 
 export class Product {

@@ -1,15 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
+import { Test, TestingModule } from '@nestjs/testing';
+import { mockProductsService } from './__mocks__/products.service';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import {
-  mockCreateResult,
-  mockDeleteResult,
-  mockFindAllResult,
-  mockFindOneResult,
-  mockProductsService,
-  mockUpdateResult,
-} from './__mocks__/products.service';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -38,7 +31,16 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: mockFindAllResult,
+        data: expect.any(
+          Array<{
+            title: string;
+            description: string;
+            code: string;
+            price: number;
+            category: string;
+            thumbnails: string[];
+          }>,
+        ),
         meta: { limit: expect.any(Number), offset: expect.any(Number) },
       });
 
@@ -48,6 +50,7 @@ describe('ProductsController', () => {
 
   describe('findOne', () => {
     it('should find one product', async () => {
+      // Prepare
       const productId = '7c7a2ccfafbfd8f997117c19';
 
       // Act
@@ -56,7 +59,17 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: mockFindOneResult,
+        data: {
+          title: 'Elegant Steel Ball',
+          description:
+            'The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality',
+          code: 'a4de7cfb3845592acedccfad',
+          price: 293,
+          category: 'Towels',
+          thumbnails: [
+            'https://loremflickr.com/640/480/food?lock=1011313511759872',
+          ],
+        },
       });
 
       expect(service.findOne).toHaveBeenCalledTimes(1);
@@ -86,7 +99,17 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: mockCreateResult,
+        data: {
+          title: 'Modern Bronze Salad',
+          description:
+            'New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016',
+          code: '4f1fd47ca3dd2dd6cfc03ca1',
+          price: 103,
+          category: 'Gloves',
+          thumbnails: [
+            'https://loremflickr.com/640/480/food?lock=6499831142940672',
+          ],
+        },
       });
 
       expect(service.create).toHaveBeenCalledTimes(1);
@@ -110,7 +133,17 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: mockUpdateResult,
+        data: {
+          title: 'Modern Metal Car',
+          description:
+            'New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016',
+          code: 'cece537d44da2aadf07c4d66',
+          price: 554,
+          category: 'Towels',
+          thumbnails: [
+            'https://loremflickr.com/640/480/food?lock=5042146096709632',
+          ],
+        },
       });
 
       expect(service.update).toHaveBeenCalledTimes(1);
@@ -129,7 +162,17 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: mockDeleteResult,
+        data: {
+          title: 'Intelligent Metal Cheese',
+          description:
+            'New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016',
+          code: '2ce1bfa8d32f763daed76163',
+          price: 603,
+          thumbnails: [
+            'https://loremflickr.com/640/480/food?lock=2418136341020672',
+          ],
+          category: 'Salad',
+        },
       });
 
       expect(service.delete).toHaveBeenCalledTimes(1);
