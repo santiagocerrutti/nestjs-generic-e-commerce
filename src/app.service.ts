@@ -10,6 +10,6 @@ export class AppService {
   ) {}
 
   getHello(): string {
-    return `${this.configService.port}`;
+    return `Hello from port: ${this.configService.port}`;
   }
 }

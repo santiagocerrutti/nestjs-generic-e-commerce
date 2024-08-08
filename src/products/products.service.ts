@@ -1,112 +1,105 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
-import { randomUUID } from 'crypto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Product } from './product.entity';
+import { ProductSchema } from './product.schema';
 import { ProductRequestDto } from './product.request.dto';
 
 @Injectable()
 export class ProductsService {
-  private products: Product[] = [
-    {
-      _id: '6686e63d7d92a73d9c4998ee',
-      title: 'Park Is Mine, The',
-      description:
-        'est risus auctor sed tristique in tempus sit amet sem fusce consequat nulla nisl',
-      code: '129905510-9',
-      price: 72.09,
-      status: true,
-      stock: 52,
-      category: 'Action|Drama|Thriller',
-      thumbnails: [
-        'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=856&q=80',
-      ],
-    },
-    {
-      _id: '6686e64acc31735db8605159',
-      title: "Dupes, The (Al-makhdu'un)",
-      description:
-        'laoreet ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel sem sed sagittis nam congue risus semper porta',
-      code: '698375539-1',
-      price: 58.01,
-      status: true,
-      stock: 75,
-      category: 'Drama',
-      thumbnails: [
-        'https://images.unsplash.com/photo-1542204165-65bf26472b9b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
-      ],
-    },
-    {
-      _id: '6686e650f576037fd2b1c41f',
-      title: 'Spanglish',
-      description:
-        'sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod scelerisque quam turpis adipiscing lorem vitae',
-      code: '206097384-8',
-      price: 83.58,
-      status: true,
-      stock: 72,
-      category: 'Comedy|Drama|Romance',
-      thumbnails: [
-        'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=725&q=80',
-      ],
-    },
-  ];
+  constructor(
+    @InjectRepository(ProductSchema)
+    private productsRepository: Repository<Product>,
+  ) {}
 
+  /**
+   * Retrieves all products from the database.
+   *
+   * @returns A promise that resolves to an array of Product objects representing all products.
+   */
   async findAll(): Promise<Product[]> {
-    return Promise.resolve(this.products);
+    const result = await this.productsRepository.find();
+
+    return result;
   }
 
-  async findOne(productId: string): Promise<Product> {
-    const product = this.products.find((p) => p._id === productId);
+  /**
+   * Retrieves a product by its ID from the database.
+   *
+   * @param productId - The ID of the product to retrieve.
+   * @returns A promise that resolves to the Product object representing the product with the specified ID.
+   * @throws NotFoundException with an error message 'Product not found' if the product with the given ID does not exist.
+   */
+  async findOne(productId: number): Promise<Product> {
+    const product = await this.productsRepository.findOneBy({
+      id: productId,
+    });
 
-    if (product) {
-      return Promise.resolve(product);
-    }
-    throw new NotFoundException();
+    if (product) return product;
+    throw new NotFoundException({
+      errors: ['Product not found'],
+    });
   }
 
-  async create(product: ProductRequestDto): Promise<Product> {
-    const newProduct = {
-      ...product,
-      _id: randomUUID(),
-    };
+  /**
+   * Creates a new product in the database.
+   *
+   * @param productDto - The data transfer object containing information about the product to be created.
+   * @returns A promise that resolves to the Product object representing the newly created product.
+   */
+  async create(productDto: ProductRequestDto): Promise<Product> {
+    const product = this.productsRepository.create(productDto);
 
-    this.products.push(newProduct);
+    const result = await this.productsRepository.save(product);
 
-    return Promise.resolve(newProduct);
+    return result;
   }
 
+  /**
+   * Updates a product in the database based on the provided product ID and data.
+   *
+   * @param productId - The ID of the product to update.
+   * @param productDto - The partial data transfer object containing the updated information for the product.
+   * @returns A promise that resolves to the Product object representing the updated product.
+   * @throws NotFoundException with an error message 'Product not found' if the product with the given ID does not exist.
+   */
   async update(
-    productId: string,
-    product: Partial<ProductRequestDto>,
+    productId: number,
+    productDto: Partial<ProductRequestDto>,
   ): Promise<Product> {
-    throw new InternalServerErrorException();
-    // const index = this.products.findIndex((p) => p._id === productId);
-
-    // if (index >= 0) {
-    //   const updatedProduct = {
-    //     ...this.products[index],
-    //     ...product,
-    //   };
-
-    //   this.products[index] = updatedProduct;
-
-    //   return Promise.resolve(updatedProduct);
-    // }
-    // throw new NotFoundException({
-    //   errors: ['Product not found'],
-    // });
-  }
-
-  async delete(productId: string): Promise<Product> {
-    const product = this.products.find((p) => p._id === productId);
+    const product = await this.productsRepository.findOneBy({
+      id: productId,
+    });
 
     if (product) {
-      this.products = this.products.filter((p) => p._id !== productId);
+      this.productsRepository.merge(product, productDto);
 
-      return Promise.resolve(product);
+      const result = await this.productsRepository.save(product);
+
+      return result;
+    }
+
+    throw new NotFoundException({
+      errors: ['Product not found'],
+    });
+  }
+
+  /**
+   * Deletes a product from the database based on the provided product ID.
+   *
+   * @param productId - The ID of the product to delete.
+   * @returns A promise that resolves to the Product object representing the deleted product.
+   * @throws NotFoundException with an error message 'Product not found' if the product with the given ID does not exist.
+   */
+  async delete(productId: number): Promise<Product> {
+    const product = await this.productsRepository.findOneBy({
+      id: productId,
+    });
+
+    if (product) {
+      await this.productsRepository.delete(productId);
+
+      return product;
     }
 
     throw new NotFoundException(['Product not found']);

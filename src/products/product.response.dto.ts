@@ -17,6 +17,7 @@ export class ProductResponseDto {
 
   /** @example 103 */
   @Expose()
+  @Type(() => Number)
   readonly price: number;
 
   /** @example Gloves */

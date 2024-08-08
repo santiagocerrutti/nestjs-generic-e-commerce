@@ -9,7 +9,7 @@ services:
     env_file:
       - .prod.env
     depends_on:
-      - mongo-db
+      - postgres
   postgres:
     container_name: nestjs-generic-e-commerce-db
     image: postgres:16.3-alpine3.20
