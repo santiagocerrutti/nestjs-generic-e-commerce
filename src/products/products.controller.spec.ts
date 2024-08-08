@@ -14,7 +14,7 @@ describe('ProductsController', () => {
       providers: [
         {
           provide: ProductsService,
-          useValue: createMock<ProductsService>(mockProductsService),
+          useValue: createMock<ProductsService>({ ...mockProductsService }),
         },
       ],
     }).compile();
@@ -51,7 +51,7 @@ describe('ProductsController', () => {
   describe('findOne', () => {
     it('should find one product', async () => {
       // Prepare
-      const productId = '7c7a2ccfafbfd8f997117c19';
+      const productId = 1;
 
       // Act
       const result = await controller.findOne(productId);
@@ -120,7 +120,7 @@ describe('ProductsController', () => {
   describe('update', () => {
     it('should update a product by id', async () => {
       // Prepare
-      const productId = '7c7a2ccfafbfd8f997117c19';
+      const productId = 1;
       const payload = {
         data: {
           description: 'An updated product description',
@@ -154,7 +154,7 @@ describe('ProductsController', () => {
   describe('should delete a product by id', () => {
     it('should create a product', async () => {
       // Prepare
-      const productId = '7c7a2ccfafbfd8f997117c19';
+      const productId = 1;
 
       // Act
       const result = await controller.delete(productId);

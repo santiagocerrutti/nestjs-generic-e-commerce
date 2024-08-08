@@ -2,7 +2,7 @@
 //* Una entity puede tener atributos referenciales a otras entities.
 
 export class Product {
-  _id: string;
+  id: number;
   title: string;
   description: string;
   code: string;

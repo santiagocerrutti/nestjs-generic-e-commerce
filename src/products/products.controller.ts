@@ -118,7 +118,7 @@ export class ProductsController {
   })
   @Get('/:productId')
   async findOne(
-    @Param('productId') productId: string,
+    @Param('productId') productId: number,
   ): Promise<ProductResponseBody> {
     const result = await this.productsService.findOne(productId);
 
@@ -148,7 +148,7 @@ export class ProductsController {
   })
   @Put('/:productId')
   async update(
-    @Param('productId') productId: string,
+    @Param('productId') productId: number,
     @Body() payload: UpdateProductRequestBody,
   ): Promise<ProductResponseBody> {
     const result = await this.productsService.update(productId, payload.data);
@@ -178,7 +178,7 @@ export class ProductsController {
   })
   @Delete('/:productId')
   async delete(
-    @Param('productId') productId: string,
+    @Param('productId') productId: number,
   ): Promise<ProductResponseBody> {
     const result = await this.productsService.delete(productId);
 
