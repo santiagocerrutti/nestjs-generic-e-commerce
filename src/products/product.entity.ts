@@ -11,4 +11,7 @@ export class Product {
   stock: number;
   category: string;
   thumbnails: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
 }

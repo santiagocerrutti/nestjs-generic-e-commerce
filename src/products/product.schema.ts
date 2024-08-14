@@ -20,5 +20,8 @@ export const ProductSchema = new EntitySchema<Product>({
     stock: { type: 'integer' },
     category: { type: 'text' },
     thumbnails: { type: 'jsonb' },
+    createdAt: { type: 'timestamp with time zone', createDate: true },
+    updatedAt: { type: 'timestamp with time zone', updateDate: true },
+    deletedAt: { type: 'timestamp with time zone', deleteDate: true },
   },
 });

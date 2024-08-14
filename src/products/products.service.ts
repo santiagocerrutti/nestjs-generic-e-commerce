@@ -72,7 +72,10 @@ export class ProductsService {
     });
 
     if (product) {
-      this.productsRepository.merge(product, productDto);
+      this.productsRepository.merge(product, {
+        ...productDto,
+        updatedAt: new Date(),
+      });
 
       const result = await this.productsRepository.save(product);
 
@@ -97,9 +100,13 @@ export class ProductsService {
     });
 
     if (product) {
-      await this.productsRepository.delete(productId);
+      this.productsRepository.merge(product, {
+        deletedAt: new Date(),
+      });
 
-      return product;
+      const result = await this.productsRepository.save(product);
+
+      return result;
     }
 
     throw new NotFoundException(['Product not found']);

@@ -121,10 +121,10 @@ describe('ProductsService', () => {
       expect(repository.findOneBy).toHaveBeenCalledTimes(1);
       expect(repository.findOneBy).toHaveBeenCalledWith({ id: productId });
       expect(repository.merge).toHaveBeenCalledTimes(1);
-      expect(repository.merge).toHaveBeenCalledWith(
-        mockFindOneByResult,
-        productDto,
-      );
+      expect(repository.merge).toHaveBeenCalledWith(mockFindOneByResult, {
+        ...productDto,
+        updatedAt: expect.any(Date),
+      });
       expect(repository.save).toHaveBeenCalledTimes(1);
       expect(repository.save).toHaveBeenCalledWith(mockFindOneByResult);
     });
@@ -157,11 +157,15 @@ describe('ProductsService', () => {
       const result = await service.delete(productId);
 
       // Assert
-      expect(result).toEqual(mockFindOneByResult);
+      expect(result).toEqual(mockSaveResult);
       expect(repository.findOneBy).toHaveBeenCalledTimes(1);
       expect(repository.findOneBy).toHaveBeenCalledWith({ id: productId });
-      expect(repository.delete).toHaveBeenCalledTimes(1);
-      expect(repository.delete).toHaveBeenCalledWith(productId);
+      expect(repository.merge).toHaveBeenCalledTimes(1);
+      expect(repository.merge).toHaveBeenCalledWith(mockFindOneByResult, {
+        deletedAt: expect.any(Date),
+      });
+      expect(repository.save).toHaveBeenCalledTimes(1);
+      expect(repository.save).toHaveBeenCalledWith(mockFindOneByResult);
     });
 
     it('should throw NotFoundException when productId does not exist', async () => {
