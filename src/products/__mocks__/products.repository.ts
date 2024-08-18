@@ -12,6 +12,8 @@ const fakeProducts: Product[] = [
     stock: 86,
     category: 'Towels',
     thumbnails: ['https://loremflickr.com/640/480/food?lock=1011313511759872'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: 2,
@@ -24,6 +26,8 @@ const fakeProducts: Product[] = [
     stock: 56,
     category: 'Gloves',
     thumbnails: ['https://loremflickr.com/640/480/food?lock=6499831142940672'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: 3,
@@ -36,6 +40,8 @@ const fakeProducts: Product[] = [
     stock: 70,
     category: 'Towels',
     thumbnails: ['https://loremflickr.com/640/480/food?lock=5042146096709632'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: 4,
@@ -48,6 +54,8 @@ const fakeProducts: Product[] = [
     stock: 76,
     category: 'Salad',
     thumbnails: ['https://loremflickr.com/640/480/food?lock=2418136341020672'],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
