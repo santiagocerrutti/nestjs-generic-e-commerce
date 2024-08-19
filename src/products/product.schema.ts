@@ -31,6 +31,7 @@ export const ProductSchema = new EntitySchema<Product>({
       type: 'timestamp with time zone',
       updateDate: true,
     },
+    // objects with not null deletedDate will not be retrieved by default
     deletedAt: {
       name: 'deleted_at',
       type: 'timestamp with time zone',
