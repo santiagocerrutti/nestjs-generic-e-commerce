@@ -14,8 +14,11 @@ import {
   ApiNotFoundResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { plainToInstance } from 'class-transformer';
-import { ErrorResponseBody, FailResponseBody } from '../types.dto';
+import {
+  ErrorResponseBody,
+  FailResponseBody,
+  PaginationQueryParamsDto,
+} from '../types.dto';
 import {
   CreateProductRequestBody,
   UpdateProductRequestBody,
@@ -71,30 +74,27 @@ export class ProductsController {
 
     return {
       status: 'success',
-      data: plainToInstance(ProductResponseDto, result),
+      data: new ProductResponseDto(result),
     };
   }
 
   /**
    * Retrieves all products with optional pagination parameters.
    *
-   * @param limit - The maximum number of products to retrieve (default: 100).
-   * @param offset - The offset for paginating through the products (default: 0).
-   * @returns An object with the status, an array of product data, and pagination metadata.
+   * @param pagination - The pagination parameters for retrieving products.
+   * @returns A Promise containing an object with the status, an array of product data, and pagination metadata.
    */
   @Get()
   async findAll(
-    @Query('limit') limit = 100,
-    @Query('offset') offset = 0,
+    @Query() pagination: PaginationQueryParamsDto,
   ): Promise<ProductArrayResponseBody> {
-    const result = await this.productsService.findAll();
+    const result = await this.productsService.findAll(pagination);
 
     return {
       status: 'success',
-      data: result.map((r) => plainToInstance(ProductResponseDto, r)),
+      data: result.map((r) => new ProductResponseDto(r)),
       meta: {
-        limit,
-        offset,
+        ...pagination,
       },
     };
   }
@@ -124,7 +124,7 @@ export class ProductsController {
 
     return {
       status: 'success',
-      data: plainToInstance(ProductResponseDto, result),
+      data: new ProductResponseDto(result),
     };
   }
 
@@ -155,7 +155,7 @@ export class ProductsController {
 
     return {
       status: 'success',
-      data: plainToInstance(ProductResponseDto, result),
+      data: new ProductResponseDto(result),
     };
   }
 
@@ -184,7 +184,7 @@ export class ProductsController {
 
     return {
       status: 'success',
-      data: plainToInstance(ProductResponseDto, result),
+      data: new ProductResponseDto(result),
     };
   }
 }

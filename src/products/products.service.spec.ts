@@ -2,6 +2,7 @@ import { createMock } from '@golevelup/ts-jest';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { PaginationQueryParamsDto } from 'src/types.dto';
 import { Repository } from 'typeorm';
 import {
   mockCreateResult,
@@ -40,12 +41,22 @@ describe('ProductsService', () => {
 
   describe('findAll', () => {
     it('should return all products and call repository', async () => {
+      // Prepare
+      const params: PaginationQueryParamsDto = {
+        limit: 10,
+        offset: 0,
+      };
+
       // Act
-      const result = await service.findAll();
+      const result = await service.findAll(params);
 
       // Assert
       expect(result).toEqual(mockFindResult);
       expect(repository.find).toHaveBeenCalledTimes(1);
+      expect(repository.find).toHaveBeenCalledWith({
+        take: params.limit,
+        skip: params.offset,
+      });
     });
   });
 

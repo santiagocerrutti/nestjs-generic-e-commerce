@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationQueryParamsDto } from '../types.dto';
 import { Repository } from 'typeorm';
 import { Product } from './product.entity';
-import { ProductSchema } from './product.schema';
 import { ProductRequestDto } from './product.request.dto';
+import { ProductSchema } from './product.schema';
 
 @Injectable()
 export class ProductsService {
@@ -17,8 +18,14 @@ export class ProductsService {
    *
    * @returns A promise that resolves to an array of Product objects representing all products.
    */
-  async findAll(): Promise<Product[]> {
-    const result = await this.productsRepository.find();
+  async findAll(pagination: PaginationQueryParamsDto): Promise<Product[]> {
+    const { limit, offset } = pagination;
+
+    /** @see: https://typeorm.io/find-options */
+    const result = await this.productsRepository.find({
+      take: limit,
+      skip: offset,
+    });
 
     return result;
   }
