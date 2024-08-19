@@ -3,6 +3,8 @@ import {
   IsArray,
   IsNotEmpty,
   IsNotEmptyObject,
+  IsPositive,
+  Min,
   ValidateNested,
 } from 'class-validator';
 
@@ -41,6 +43,34 @@ export class SuccessResponseBody<T> {
 }
 
 /**
+ * Represents a success response with paginated data.
+ * @template T - The type of data in the response.
+ * @property {string} status - The status of the response. Always 'success'.
+ * @property {T | null} data - The actual data in the response.
+ * @property {object} meta - Metadata about the paginated response.
+ * @property {number} meta.limit - The number of retrieved objects.
+ * @property {number} meta.offset - The number of skipped objects from object 1.
+ */
+export class SuccessPaginatedResponseBody<T> {
+  /** @example success */
+  readonly status: 'success';
+  data: T | null;
+
+  meta: {
+    /**
+     * number of retrieved objects
+     * @example 100
+     */
+    limit: number;
+    /**
+     * number of skipped objects from object 1
+     * @example 0
+     */
+    offset: number;
+  };
+}
+
+/**
  * Represents a response body for client errors.
  * @property {string} status - The status of the response, always set to 'fail'.
  * @property {object} data - Contains error details.
@@ -74,4 +104,20 @@ export class ErrorResponseBody {
   };
   /** @example "Internal Server Error" */
   message: string;
+}
+
+export class PaginationQueryParamsDto {
+  @IsPositive()
+  /**
+   * number of objects to retrieve
+   * @example 100
+   */
+  limit: number = 100;
+
+  @Min(0)
+  /**
+   * number of objects to skip from object 1
+   * @example 0
+   */
+  offset: number = 0;
 }

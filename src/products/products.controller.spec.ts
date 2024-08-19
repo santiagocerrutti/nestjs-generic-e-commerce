@@ -1,8 +1,15 @@
 import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockProductsService } from './__mocks__/products.service';
+import {
+  mockCreateResult,
+  mockDeleteResult,
+  mockFindOneResult,
+  mockProductsService,
+  mockUpdateResult,
+} from './__mocks__/products.service';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
+import { PaginationQueryParamsDto } from 'src/types.dto';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -25,8 +32,14 @@ describe('ProductsController', () => {
 
   describe('findAll', () => {
     it('should find all products', async () => {
+      // Prepare
+      const params: PaginationQueryParamsDto = {
+        limit: 10,
+        offset: 0,
+      };
+
       // Act
-      const result = await controller.findAll();
+      const result = await controller.findAll(params);
 
       // Assert
       expect(result).toEqual({
@@ -41,10 +54,11 @@ describe('ProductsController', () => {
             thumbnails: string[];
           }>,
         ),
-        meta: { limit: expect.any(Number), offset: expect.any(Number) },
+        meta: { limit: params.limit, offset: params.offset },
       });
 
       expect(service.findAll).toHaveBeenCalledTimes(1);
+      expect(service.findAll).toHaveBeenCalledWith(params);
     });
   });
 
@@ -59,17 +73,7 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: {
-          title: 'Elegant Steel Ball',
-          description:
-            'The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality',
-          code: 'a4de7cfb3845592acedccfad',
-          price: 293,
-          category: 'Towels',
-          thumbnails: [
-            'https://loremflickr.com/640/480/food?lock=1011313511759872',
-          ],
-        },
+        data: mockFindOneResult,
       });
 
       expect(service.findOne).toHaveBeenCalledTimes(1);
@@ -99,17 +103,7 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: {
-          title: 'Modern Bronze Salad',
-          description:
-            'New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016',
-          code: '4f1fd47ca3dd2dd6cfc03ca1',
-          price: 103,
-          category: 'Gloves',
-          thumbnails: [
-            'https://loremflickr.com/640/480/food?lock=6499831142940672',
-          ],
-        },
+        data: mockCreateResult,
       });
 
       expect(service.create).toHaveBeenCalledTimes(1);
@@ -133,17 +127,7 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: {
-          title: 'Modern Metal Car',
-          description:
-            'New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016',
-          code: 'cece537d44da2aadf07c4d66',
-          price: 554,
-          category: 'Towels',
-          thumbnails: [
-            'https://loremflickr.com/640/480/food?lock=5042146096709632',
-          ],
-        },
+        data: mockUpdateResult,
       });
 
       expect(service.update).toHaveBeenCalledTimes(1);
@@ -162,17 +146,7 @@ describe('ProductsController', () => {
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: {
-          title: 'Intelligent Metal Cheese',
-          description:
-            'New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016',
-          code: '2ce1bfa8d32f763daed76163',
-          price: 603,
-          thumbnails: [
-            'https://loremflickr.com/640/480/food?lock=2418136341020672',
-          ],
-          category: 'Salad',
-        },
+        data: mockDeleteResult,
       });
 
       expect(service.delete).toHaveBeenCalledTimes(1);

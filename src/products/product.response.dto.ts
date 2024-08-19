@@ -1,8 +1,16 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { SuccessResponseBody } from '../types.dto';
+import {
+  SuccessPaginatedResponseBody,
+  SuccessResponseBody,
+} from '../types.dto';
+import { Product } from './product.entity';
 
 @Exclude()
 export class ProductResponseDto {
+  /** @example 2  */
+  @Expose()
+  id: number;
+
   /** @example "Modern Bronze Salad" */
   @Expose()
   readonly title: string;
@@ -14,6 +22,20 @@ export class ProductResponseDto {
   /** @example 4f1fd47ca3dd2dd6cfc03ca1 */
   @Expose()
   readonly code: string;
+
+  /**
+   * @example true
+   * */
+  @Expose()
+  @Type(() => Boolean)
+  readonly status: boolean;
+
+  /**
+   * @example 86
+   * */
+  @Expose()
+  @Type(() => Number)
+  readonly stock: number;
 
   /** @example 103 */
   @Expose()
@@ -30,6 +52,10 @@ export class ProductResponseDto {
    */
   @Expose()
   readonly thumbnails: string[];
+
+  constructor(partial: Partial<Product>) {
+    Object.assign(this, partial);
+  }
 }
 
 export class ProductResponseBody extends SuccessResponseBody<ProductResponseDto> {
@@ -37,14 +63,9 @@ export class ProductResponseBody extends SuccessResponseBody<ProductResponseDto>
   data: ProductResponseDto;
 }
 
-export class ProductArrayResponseBody extends SuccessResponseBody<
+export class ProductArrayResponseBody extends SuccessPaginatedResponseBody<
   ProductResponseDto[]
 > {
   @Type(() => ProductResponseDto)
   data: ProductResponseDto[];
-
-  meta: {
-    limit: number;
-    offset: number;
-  };
 }
