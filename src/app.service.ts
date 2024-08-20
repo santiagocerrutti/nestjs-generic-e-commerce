@@ -9,6 +9,10 @@ export class AppService {
     private configService: ConfigType<() => IConfig>,
   ) {}
 
+  /**
+   * Returns a greeting message including the port number.
+   * @returns A string containing the greeting message with the port number.
+   */
   getHello(): string {
     return `Hello from port: ${this.configService.port}`;
   }

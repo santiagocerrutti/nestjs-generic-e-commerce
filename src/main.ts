@@ -36,6 +36,9 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
+  // Starts listening for shutdown hooks, this is used by Health-check module
+  app.enableShutdownHooks();
+
   await app.listen(configService.port);
 }
 bootstrap();
