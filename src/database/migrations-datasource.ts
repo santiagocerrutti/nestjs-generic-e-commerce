@@ -4,7 +4,8 @@ import { ProductSchema } from '../products/product.schema';
 
 const dataSource = new DataSource({
   type: 'postgres',
-  host: '127.0.0.1',
+  // host: '127.0.0.1',
+  host: process.env.POSTGRES_HOST,
   port: +process.env.POSTGRES_PORT,
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,

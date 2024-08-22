@@ -4,6 +4,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/exception-filter';
+import { ApikeyGuard } from './common/guards/apikey.guard';
 import { IConfig } from './config';
 
 async function bootstrap() {
@@ -35,6 +36,7 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  app.useGlobalGuards(new ApikeyGuard(configService));
 
   // Starts listening for shutdown hooks, this is used by Health-check module
   app.enableShutdownHooks();
