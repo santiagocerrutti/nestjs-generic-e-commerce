@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: dockerfile.local
     ports:
-      - 8081:8081
+      - $HOST_PORT:$PORT
     env_file:
       - .dev.env
     depends_on:
@@ -34,3 +34,5 @@ volumes:
 networks:
   default:
     name: nestjs-generic-e-commerce-network
+
+# docker compose --env-file .dev.env -f docker-compose.local.yml up --build
