@@ -1,15 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
-import { ProductsController } from './products.controller';
-import { ProductsService } from './products.service';
+import { Test, TestingModule } from '@nestjs/testing';
 import {
   mockCreateResult,
   mockDeleteResult,
-  mockFindAllResult,
   mockFindOneResult,
   mockProductsService,
   mockUpdateResult,
 } from './__mocks__/products.service';
+import { ProductsController } from './products.controller';
+import { ProductsService } from './products.service';
+import { PaginationQueryParamsDto } from 'src/types.dto';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -21,7 +21,7 @@ describe('ProductsController', () => {
       providers: [
         {
           provide: ProductsService,
-          useValue: createMock<ProductsService>(mockProductsService),
+          useValue: createMock<ProductsService>({ ...mockProductsService }),
         },
       ],
     }).compile();
@@ -32,23 +32,40 @@ describe('ProductsController', () => {
 
   describe('findAll', () => {
     it('should find all products', async () => {
+      // Prepare
+      const params: PaginationQueryParamsDto = {
+        limit: 10,
+        offset: 0,
+      };
+
       // Act
-      const result = await controller.findAll();
+      const result = await controller.findAll(params);
 
       // Assert
       expect(result).toEqual({
         status: 'success',
-        data: mockFindAllResult,
-        meta: { limit: expect.any(Number), offset: expect.any(Number) },
+        data: expect.any(
+          Array<{
+            title: string;
+            description: string;
+            code: string;
+            price: number;
+            category: string;
+            thumbnails: string[];
+          }>,
+        ),
+        meta: { limit: params.limit, offset: params.offset },
       });
 
       expect(service.findAll).toHaveBeenCalledTimes(1);
+      expect(service.findAll).toHaveBeenCalledWith(params);
     });
   });
 
   describe('findOne', () => {
     it('should find one product', async () => {
-      const productId = '7c7a2ccfafbfd8f997117c19';
+      // Prepare
+      const productId = 1;
 
       // Act
       const result = await controller.findOne(productId);
@@ -97,7 +114,7 @@ describe('ProductsController', () => {
   describe('update', () => {
     it('should update a product by id', async () => {
       // Prepare
-      const productId = '7c7a2ccfafbfd8f997117c19';
+      const productId = 1;
       const payload = {
         data: {
           description: 'An updated product description',
@@ -121,7 +138,7 @@ describe('ProductsController', () => {
   describe('should delete a product by id', () => {
     it('should create a product', async () => {
       // Prepare
-      const productId = '7c7a2ccfafbfd8f997117c19';
+      const productId = 1;
 
       // Act
       const result = await controller.delete(productId);

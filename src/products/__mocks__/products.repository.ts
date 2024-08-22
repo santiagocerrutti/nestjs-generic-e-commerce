@@ -59,16 +59,14 @@ const fakeProducts: Product[] = [
   },
 ];
 
-export const mockFindAllResult = fakeProducts;
-export const mockFindOneResult = fakeProducts[0];
-export const mockCreateResult = fakeProducts[1];
-export const mockUpdateResult = fakeProducts[2];
-export const mockDeleteResult = fakeProducts[3];
+export const mockFindResult = fakeProducts;
+export const mockFindOneByResult = fakeProducts[1];
+export const mockSaveResult = fakeProducts[2];
+export const mockCreateResult = fakeProducts[3];
 
-export const mockProductsService = {
-  findAll: jest.fn().mockResolvedValue(mockFindAllResult),
-  findOne: jest.fn().mockResolvedValue(mockFindOneResult),
-  create: jest.fn().mockResolvedValue(mockCreateResult),
-  update: jest.fn().mockResolvedValue(mockUpdateResult),
-  delete: jest.fn().mockResolvedValue(mockDeleteResult),
+export const mockProductsRepository = {
+  find: jest.fn().mockResolvedValue(mockFindResult),
+  findOneBy: jest.fn().mockResolvedValue(mockFindOneByResult),
+  create: jest.fn().mockReturnValue(mockCreateResult),
+  save: jest.fn().mockResolvedValue(mockSaveResult),
 };

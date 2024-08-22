@@ -1,0 +1,32 @@
+services:
+  web-service:
+    container_name: express-generic-e-commerce-service
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - $HOST_PORT:$PORT
+    env_file:
+      - .prod.env
+    depends_on:
+      - postgres
+  postgres:
+    container_name: nestjs-generic-e-commerce-db
+    image: postgres:16.3-alpine3.20
+    restart: always
+    shm_size: 128mb
+    env_file:
+      - .prod.env
+    # ports exposed for migration purposes
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+volumes:
+  postgresql-data:
+
+
+networks:
+  default:
+    name: express-generic-e-commerce-network

@@ -1,0 +1,38 @@
+services:
+  web-service:
+    container_name: nestjs-generic-e-commerce-service
+    build:
+      context: .
+      dockerfile: dockerfile.local
+    ports:
+      - $HOST_PORT:$PORT
+    env_file:
+      - .dev.env
+    depends_on:
+      - postgres
+    # volumes specified for hot reloading
+    volumes:
+      - ./src:/app/src
+      - ./test:/app/test
+  postgres:
+    container_name: nestjs-generic-e-commerce-db
+    image: postgres:16.3-alpine3.20
+    restart: always
+    shm_size: 128mb
+    env_file:
+      - .dev.env
+    # ports exposed for testing purposes
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+volumes:
+  postgresql-data:
+
+
+networks:
+  default:
+    name: nestjs-generic-e-commerce-network
+
+# docker compose --env-file .dev.env -f docker-compose.local.yml up --build
