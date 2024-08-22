@@ -3,6 +3,8 @@ import { registerAs } from '@nestjs/config';
 export interface IConfig {
   port: number;
 
+  clientApiKey: string;
+
   postgresHost: string;
   postgresPort: number;
   postgresUser: string;
@@ -13,6 +15,8 @@ export interface IConfig {
 export default registerAs('config', (): IConfig => {
   return {
     port: +process.env.PORT || 8081,
+
+    clientApiKey: process.env.CLIENT_API_KEY,
 
     postgresHost: process.env.POSTGRES_HOST,
     postgresPort: +process.env.POSTGRES_PORT || 5432,
