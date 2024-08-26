@@ -1,11 +1,12 @@
 services:
-  web-service:
-    container_name: express-generic-e-commerce-service
+  ecommerce-backend:
+    container_name: nestjs-generic-e-commerce-service
     build:
       context: .
       dockerfile: dockerfile
-    ports:
-      - $HOST_PORT:$PORT
+    # There is no need to do port mapping since incoming request are manage by the reverse proxy
+    # ports:
+    #   - $HOST_PORT:$PORT
     env_file:
       - .prod.env
     depends_on:
@@ -22,6 +23,15 @@ services:
       - 5432:5432
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+  reverse-proxy:
+    container_name: reverse-proxy
+    image: nginx:1.27.1-alpine3.20
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - ecommerce-backend
 
 volumes:
   postgresql-data:
@@ -30,3 +40,5 @@ volumes:
 networks:
   default:
     name: express-generic-e-commerce-network
+
+# docker compose --env-file .prod.env up -d --build
