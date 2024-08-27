@@ -1,20 +1,22 @@
 services:
-  web-service:
+  ecommerce-backend:
     container_name: nestjs-generic-e-commerce-service
     build:
       context: .
       dockerfile: dockerfile.local
-    ports:
-      - $HOST_PORT:$PORT
+    restart: always
+    # There is no need to do port mapping since incoming request are manage by the reverse proxy
+    # ports:
+    #   - $HOST_PORT:$PORT
     env_file:
       - .dev.env
-    depends_on:
-      - postgres
     # volumes specified for hot reloading
     volumes:
       - ./src:/app/src
       - ./test:/app/test
-  postgres:
+    depends_on:
+      - database
+  database:
     container_name: nestjs-generic-e-commerce-db
     image: postgres:16.3-alpine3.20
     restart: always
@@ -26,6 +28,27 @@ services:
       - 5432:5432
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+  reverse-proxy:
+    container_name: reverse-proxy
+    image: nginx:1.27.1-alpine3.20
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./letsencrypt:/letsencrypt
+      - ./letsencrypt/certs:/etc/letsencrypt
+    depends_on:
+      - ecommerce-backend
+  certificates:
+    container_name: certificates
+    build:
+      context: .
+      dockerfile: ./certbot/dockerfile
+    restart: always
+    volumes:
+      - ./letsencrypt:/letsencrypt
+      - ./letsencrypt/certs:/etc/letsencrypt
 
 volumes:
   postgresql-data:
