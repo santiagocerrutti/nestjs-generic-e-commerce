@@ -1,9 +1,3 @@
 FROM debian:buster
 
 RUN apt-get update -y && apt-get install -y certbot
-
-# Comando por defecto que mantiene el contenedor corriendo
-CMD ["tail", "-f", "/dev/null"]
-
-## TODO: Revisar si es esto necesario, Si no corre ¿Se ejecutan las renovaciones automáticas de los certificados?
-## Para optimizar recursos puede pensar en encenderse este contenedor cada vez que se necesite con: docker build -t certbot . && docker run -it --rm --name certbot certbot bash

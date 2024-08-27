@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile.local
+    image: e-commerce-service
     restart: always
     # There is no need to do port mapping since incoming request are manage by the reverse proxy
     # ports:
@@ -45,10 +46,12 @@ services:
     build:
       context: .
       dockerfile: ./certbot/dockerfile
+    image: certbot
     restart: always
     volumes:
       - ./letsencrypt:/letsencrypt
       - ./letsencrypt/certs:/etc/letsencrypt
+    command: tail -f /dev/null # Mantiene el contenedor corriendo
 
 volumes:
   postgresql-data:

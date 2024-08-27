@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile
+    image: e-commerce-service
     # There is no need to do port mapping since incoming request are manage by the reverse proxy
     # ports:
     #   - $HOST_PORT:$PORT
@@ -39,9 +40,11 @@ services:
     build:
       context: .
       dockerfile: ./certbot/dockerfile
+    image: certbot
     volumes:
       - ./letsencrypt:/letsencrypt
       - ./letsencrypt/certs:/etc/letsencrypt
+    command: tail -f /dev/null # Mantiene el contenedor corriendo
 
 volumes:
   postgresql-data:
