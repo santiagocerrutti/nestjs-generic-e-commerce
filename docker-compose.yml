@@ -4,13 +4,14 @@ services:
     build:
       context: .
       dockerfile: dockerfile
+    image: e-commerce-service
     # There is no need to do port mapping since incoming request are manage by the reverse proxy
     # ports:
     #   - $HOST_PORT:$PORT
     env_file:
       - .prod.env
     depends_on:
-      - postgres
+      - database
   database:
     container_name: nestjs-generic-e-commerce-db
     image: postgres:16.3-alpine3.20
@@ -39,9 +40,11 @@ services:
     build:
       context: .
       dockerfile: ./certbot/dockerfile
+    image: certbot
     volumes:
       - ./letsencrypt:/letsencrypt
       - ./letsencrypt/certs:/etc/letsencrypt
+    command: tail -f /dev/null # Mantiene el contenedor corriendo
 
 volumes:
   postgresql-data:
